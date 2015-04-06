@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+  <Identity Name="89eaf137-472c-41b5-8b5b-a963e97ef012" Publisher="CN=Radek" Version="1.0.0.0" />
+  <Properties>
+    <DisplayName>Kompitu</DisplayName>
+    <PublisherDisplayName>Radek</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.2.1</OSMinVersion>
+    <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Kompitu.App">
+      <VisualElements DisplayName="Kompitu" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Kompitu" ForegroundText="light" BackgroundColor="#647687">
+        <DefaultTile ShowName="allLogos" />
+        <SplashScreen Image="Assets\splash.png" BackgroundColor="#647687" />
+        <InitialRotationPreference>
+          <Rotation Preference="landscape" />
+          <Rotation Preference="landscapeFlipped" />
+        </InitialRotationPreference>
+      </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

@@ -1,0 +1,53 @@
+﻿<Application
+    x:Class="Kompitu.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Kompitu.Data"
+    RequestedTheme="Light">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            
+            <ResourceDictionary.MergedDictionaries>
+
+                <!-- 
+                    Styles that define common aspects of the platform look and feel
+                    Required by Visual Studio project and item templates
+                 -->
+                <ResourceDictionary Source="Common/StandardStyles.xaml"/>
+                
+                <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+                    <!-- overrides -->
+                    <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBackgroundThemeBrush" Color="#808D98A7" />
+                    <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBorderThemeBrush" Color="#808D98A7" />
+                    <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush" Color="#FF6082ae" />
+
+                    <SolidColorBrush x:Key="ProgressBarIndeterminateForegroundThemeBrush" Color="#FFff8a58"/>
+                    
+                    <!-- 
+                    <SolidColorBrush x:Key="ListViewItemPointerOverBackgroundThemeBrush" Color="#FF395F90" />
+                    -->
+
+                    <SolidColorBrush x:Key="ListViewItemPointerOverBackgroundThemeBrush" Color="#95ff8a58" />
+                    
+                    <!--
+                    <SolidColorBrush x:Key="ButtonPointerOverBackgroundThemeBrush" Color="#FF395F90" />
+                     -->
+                    <SolidColorBrush x:Key="ButtonPointerOverBackgroundThemeBrush" Color="#95ff8a58" />
+                    <SolidColorBrush x:Key="ButtonPressedBackgroundThemeBrush" Color="#4Dffbea3" />
+
+                    <SolidColorBrush x:Key="ComboBoxPointerOverBackgroundThemeBrush" Color="#808D98A7" />
+                    <SolidColorBrush x:Key="ComboBoxItemSelectedBackgroundThemeBrush" Color="#ff8D98A7" />
+                    <SolidColorBrush x:Key="ComboBoxItemSelectedPointerOverBackgroundThemeBrush" Color="#95e65517" />
+                    <!-- 
+                    <SolidColorBrush x:Key="ButtonPressedBackgroundThemeBrush" Color="#4DFFFFFF" />
+                    -->
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <local:TaskDataSource x:Key="taskDataSource"/> 
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

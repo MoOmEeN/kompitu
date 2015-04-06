@@ -1,0 +1,360 @@
+﻿<common:LayoutAwarePage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Kompitu"
+    xmlns:common="using:Kompitu.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Input="using:Syncfusion.UI.Xaml.Controls.Input"
+    x:Name="pageRoot"
+    x:Class="Kompitu.MainPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"
+    mc:Ignorable="d">
+
+    <common:LayoutAwarePage.Resources>
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">Kompitu</x:String>
+        
+    </common:LayoutAwarePage.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid MinWidth="200">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+
+
+
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                <VisualState x:Name="FullScreenPortrait"/>
+
+                <!-- The back button and title have different styles when snapped -->
+                <VisualState x:Name="Snapped"/>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!-- Back button and page title -->
+        <Grid Margin="0,0,0,0" Grid.Row="1" Background="White">
+            <Grid.Resources>
+                <Storyboard x:Name="HideTask">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="TaskDetails">
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+                <Storyboard x:Name="ShowTask">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="TaskDetails">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Grid.Row="0" Background="LightSteelBlue">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="70" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <ProgressBar x:Name="progressBar" IsIndeterminate="True" Grid.Row="0" Grid.ColumnSpan="2" Visibility="Collapsed" Background="{x:Null}" Foreground="Black"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{StaticResource AppName}" HorizontalAlignment="Left" Margin="20,0,0,0" FontFamily="Segoe UI Light" FontSize="36" VerticalAlignment="Center" Foreground="Black" />
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
+                    <Button x:Name="markListCompleted" ToolTipService.ToolTip="Mark selected completed" HorizontalAlignment="Right" VerticalAlignment="Stretch" Style="{StaticResource AppBarButtonStyle}" Width="80" Visibility="Collapsed" Click="markListCompleted_Click">
+                        <Grid>
+                            <Image Source="Assets/appbar.list.check.png" Margin="0" HorizontalAlignment="Right" Width="41"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="sync" ToolTipService.ToolTip="Synchronize" HorizontalAlignment="Right" VerticalAlignment="Stretch" Style="{StaticResource AppBarButtonStyle}" Width="80" Click="sync_Click">
+                        <Grid>
+                            <Image x:Name="refreshBtn" Source="Assets/appbar.refresh.png" Margin="0"/>
+                        </Grid>
+                    </Button>
+                </StackPanel>
+                <Button x:Name="todaysButton" Width="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="50" RenderTransformOrigin="0.5,0.5" Background="SteelBlue" Padding="5,0,0,0" BorderBrush="SteelBlue" HorizontalContentAlignment="Left" Margin="-2,-3,-2,0" FontWeight="Normal" Grid.Column="0" Grid.Row="2" Click="todaysButton_Click" >
+                    <Grid Width="240" Height="45">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Source="Assets/appbar.calendar.png" Margin="-10,-10,-10,-10" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock TextAlignment="Center" Text="For today" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" RenderTransformOrigin="1.101,0.375" Margin="5,0,0,0" HorizontalAlignment="Left" FontFamily="Segoe UI Light" FontSize="18" Foreground="White" />
+                        <TextBlock x:Name="todaysCount" TextAlignment="Right" Text="0" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" RenderTransformOrigin="1.101,0.375" Margin="0,2,-65,0" HorizontalAlignment="Right" FontFamily="Segoe UI Light" FontSize="36" Width="104" Foreground="White" />
+                    </Grid>
+                </Button>
+                <Button x:Name="overdueButton" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="50" RenderTransformOrigin="0.5,0.5" Background="SteelBlue" HorizontalContentAlignment="Left" Padding="5,0,0,0" FontWeight="Normal" Margin="-2,0,-2,0" Grid.Column="0" Grid.Row="3" Click="overdueButton_Click">
+                    <Grid Width="240" Height="45">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Source="Assets/appbar.alert.png" Margin="-10,-10,-10,-10" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock TextAlignment="Center" Text="Overdue" Grid.Column="1" VerticalAlignment="Center" RenderTransformOrigin="1.101,0.375" Margin="5,0,0,0" HorizontalAlignment="Left" FontFamily="Segoe UI Light" FontSize="18" Foreground="White" />
+                        <TextBlock x:Name="overdueCount" TextAlignment="Right" Text="0" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" RenderTransformOrigin="1.101,0.375" Margin="0,2,-73,0" HorizontalAlignment="Right" FontFamily="Segoe UI Light" FontSize="36" Width="112" Foreground="White" />
+                    </Grid>
+                </Button>
+
+                <Button x:Name="notCompletedButton" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="50" RenderTransformOrigin="0.5,0.5" Background="SteelBlue" Padding="5,0,0,0" BorderBrush="SteelBlue" HorizontalContentAlignment="Left" Margin="-2,0,-2,0" FontWeight="Normal" Grid.Column="0" Grid.Row="4" Click="notCompletedButton_Click">
+                    <Grid Width="240" Height="45">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Source="Assets/appbar.checkmark.unchecked.png" Margin="-10,-10,-10,-10" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock TextAlignment="Center" Text="Not completed" Grid.Column="1" VerticalAlignment="Center" RenderTransformOrigin="1.101,0.375" Margin="5,0,0,0" FontFamily="Segoe UI Light" FontSize="18" Foreground="White" />
+                        <TextBlock x:Name="notCompletedCount" TextAlignment="Right" Text="0" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" RenderTransformOrigin="1.101,0.375" Margin="0,2,-21,0" HorizontalAlignment="Right" FontFamily="Segoe UI Light" FontSize="36" Width="60" Foreground="White" />
+                    </Grid>
+                </Button>
+                <Button x:Name="completedButton" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="50" RenderTransformOrigin="0.5,0.5" Background="SteelBlue" HorizontalContentAlignment="Left" Padding="5,0,0,0"  Margin="-2,0,-2,0" FontWeight="Normal" Grid.Column="0" Grid.Row="5" Click="completedButton_Click">
+                    <Grid Width="240" Height="45">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Source="Assets/appbar.checkmark.png" Margin="-10,-10,-10,-10" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock TextAlignment="Center" Text="Completed" Grid.Column="1" VerticalAlignment="Center" RenderTransformOrigin="1.101,0.375" Margin="5,0,0,0" HorizontalAlignment="Left" FontSize="18" FontFamily="Segoe UI Light" Foreground="White" />
+                        <TextBlock x:Name="completedCount" TextAlignment="Right" Text="0" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" RenderTransformOrigin="1.101,0.375" Margin="0,2,-53,0" HorizontalAlignment="Right" FontFamily="Segoe UI Light" FontSize="36" Width="92" Foreground="White" />
+                    </Grid>
+                </Button>
+
+                <ListView x:Name="taskListsView" IsItemClickEnabled="True" ItemClick="taskListsView_ItemClick" HorizontalContentAlignment="Left" BorderThickness="0" BorderBrush="Black" Margin="0,3,0,0" Background="SteelBlue" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left" Width="248" SelectionMode="Single" Foreground="White" SelectionChanged="taskListsView_SelectionChanged">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <Setter Property="Margin" Value="0,0,0,0" />
+                            <Setter Property="FontWeight" Value="Normal" />
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="VerticalAlignment" Value="Stretch" />
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="Padding"  Value="14,0,0,0" />
+                            <Setter Property="Height" Value="45" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Title}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TasksCount}" VerticalAlignment="Center" FontSize="24" Margin="10,0,0,0" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Grid Grid.Row="7" Grid.Column="0" Background="SteelBlue">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="removeList" ToolTipService.ToolTip="Remove list" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Stretch" Style="{StaticResource AppBarButtonStyle}" Width="83"  UseLayoutRounding="True" Margin="-10,-10,-10,-10" Visibility="Collapsed" Foreground="White" Click="removeList_Click">
+                        <Grid>
+                            <Image Source="Assets/appbar.delete.dark.png" Margin="0"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="addList" ToolTipService.ToolTip="Add list" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Style="{StaticResource AppBarButtonStyle}" Width="84" UseLayoutRounding="True"  Margin="-10,-10,-10,-10" Visibility="Visible" Foreground="White" Click="addList_Click">
+                        <Grid>
+                            <Image Source="Assets/appbar.add.dark.png" Margin="0"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="renameList" ToolTipService.ToolTip="Rename list"  Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource AppBarButtonStyle}" Width="83" UseLayoutRounding="True"  Margin="-10,-10,-10,-10" Visibility="Collapsed" Foreground="White" Click="renameList_Click">
+                        <Grid>
+                            <Image Source="Assets/appbar.edit.dark.png" Margin="0"/>
+                        </Grid>
+                    </Button>
+                </Grid>
+                <Grid  Grid.Row="2" Grid.Column="1" Grid.RowSpan="5">
+                    <Grid.Resources>
+                        <Storyboard x:Name="HideTaskList">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="tasksView">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                        <Storyboard x:Name="ShowTaskList">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="tasksView">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                        <Storyboard x:Name="ShowEmptyTaskList">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="emptyTextBlock">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="emptyTextBlock" Height="0" FontSize="20" Foreground="#FF444444" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                    <ListView x:Name="tasksView" HorizontalAlignment="Left" Margin="0,0,0,0"  Grid.Row="1" Grid.Column="0" Grid.RowSpan="6" Width="360" IsItemClickEnabled="True" RenderTransformOrigin="0.992,0.477" UseLayoutRounding="False" ItemClick="tasksView_ItemClick" SelectionMode="Multiple" SelectionChanged="tasksView_SelectionChanged" >
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="Margin" Value="0,0,0,0" />
+                                <Setter Property="FontWeight" Value="Normal" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                <Setter Property="VerticalAlignment" Value="Stretch" />
+                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                <Setter Property="Padding"  Value="14,0,0,0" />
+                                <Setter Property="Height" Value="55" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Stretch" Width="320" Opacity="{Binding Opacity}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding ListTitle}" Grid.Row="0" Grid.Column="0" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left" />
+                                    <TextBlock Text="{Binding DueDateString}" Foreground="{Binding DueDateColor}" Grid.Row="0" Grid.Column="1" FontSize="12" HorizontalAlignment="Right" TextAlignment="Right" Width="180" FlowDirection="LeftToRight" Padding="15,0,0,0"/>
+                                    <TextBlock Text="{Binding TitleNotEmpty}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" FontSize="15" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Grid>
+            <Rectangle Grid.Row="0" Grid.Column="1" Width="3" Fill="#ff8a58" />
+            <Grid x:Name="TaskDetails" Grid.Row="0" Grid.Column="2" Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" Background="White" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="True" HorizontalAlignment="Right" Margin="0,0,20,0">
+                    <Button x:Name="markCompleted" ToolTipService.ToolTip="Mark completed" HorizontalAlignment="Center" VerticalAlignment="Stretch" Style="{StaticResource AppBarButtonStyle}" Width="80" Padding="2,4" UseLayoutRounding="True" Margin="0" Visibility="Collapsed" Click="markCompleted_Click">
+                        <Grid>
+                            <Image Source="Assets/appbar.check.png" Margin="0"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="delete" ToolTipService.ToolTip="Remove" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource AppBarButtonStyle}" BorderThickness="0" Width="80" Visibility="Collapsed" Click="delete_Click">
+                        <Grid>
+                            <Image Source="Assets/appbar.delete.png" Margin="0"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="add" ToolTipService.ToolTip="Add" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource AppBarButtonStyle}" BorderThickness="0" Width="80" Click="add_Click">
+                        <Grid>
+                            <Image Source="Assets/appbar.add.png" Margin="0" Height="41" VerticalAlignment="Bottom"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="cancel" ToolTipService.ToolTip="Discard" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource AppBarButtonStyle}" BorderThickness="0" Width="80" Visibility="Collapsed" Click="cancel_Click">
+                        <Grid>
+                            <Image Source="Assets/appbar.cancel.png" Margin="0"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="save" ToolTipService.ToolTip="Save" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource AppBarButtonStyle}" BorderThickness="0" Width="80" Visibility="Collapsed" Click="save_Click">
+                        <Grid>
+                            <Image Source="Assets/appbar.save.png" Margin="0"/>
+                        </Grid>
+                    </Button>
+                </StackPanel>
+                <TextBlock x:Name="emptyTaskTextBlock" Grid.Row="1" Grid.Column="0" Height="0" FontSize="24" Foreground="#FF444444" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                <TextBox x:Name="taskListTextBox" Grid.Row="2" Grid.Column="0" TextWrapping="Wrap" BorderThickness="0" Margin="40,0" FontSize="16" VerticalAlignment="Center" FontWeight="Thin" Padding="10,0,10,0" FontFamily="Segoe UI Semilight" IsReadOnly="True" Height="14" MinHeight="20" Foreground="SteelBlue"/>
+                <TextBox x:Name="taskListTextBoxBorder" Grid.Row="3" Grid.Column="0" TextWrapping="Wrap" BorderThickness="1" Margin="40,3,40,0" FontSize="16" VerticalAlignment="Center" FontWeight="Thin" Padding="10,3,10,0" FontFamily="Segoe UI Semilight" IsReadOnly="True" Height="1" MinHeight="1" BorderBrush="gray"/>
+                <TextBox x:Name="taskTitleTextBox" Grid.Row="4" Grid.Column="0" TextWrapping="Wrap" BorderThickness="0" Margin="40,0" FontSize="32" VerticalAlignment="Center" FontWeight="Normal" Padding="10,3,10,0" KeyDown="takTitleTextBox_KeyDown" FontFamily="Segoe UI Semilight"/>
+                <Grid Grid.Row="5" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="27" />
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="taskUpdatedDateLabel" Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" BorderThickness="0" Margin="40,0,0,0" FontSize="16" Padding="10,0" VerticalAlignment="Center" IsReadOnly="True" MinHeight="20" Foreground="Gray" />
+                    <TextBox x:Name="taskUpdatedDateTextBox" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" BorderThickness="0" Margin="0,0,40,0" FontSize="16" Padding="10,0" Foreground="Gray"  VerticalAlignment="Center" IsReadOnly="True" MinHeight="20" />
+                    <TextBox x:Name="taskDueDateLabel" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" BorderThickness="0" Margin="40,0,0,0" FontSize="16" Padding="10,0" Foreground="Gray"  VerticalAlignment="Center" MinHeight="20" IsReadOnly="True"/>
+                    <StackPanel  Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                        <TextBox x:Name="taskDueDateTextBox" TextWrapping="Wrap" BorderThickness="0" Margin="0,2,10,2" FontSize="16" Padding="10,0" Foreground="Gray" VerticalAlignment="Center" IsReadOnly="True" MinHeight="20" Width="202" />
+                        <Button x:Name="editDueDate" Padding="0" Click="editDueDate_Click">
+                            <Grid>
+                                <Image Source="Assets/appbar.edit.png" />
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+                    
+                </Grid>
+                <TextBox x:Name="taskNotesTextBox"  Grid.Row="6" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Margin="40,15" IsSpellCheckEnabled="True" AcceptsReturn="True" BorderThickness="1" BorderBrush="Gray" KeyDown="taskNotesTextBox_KeyDown" />
+            </Grid>
+        </Grid>
+
+
+
+
+
+        <Canvas x:Name="myCanvas"
+            HorizontalAlignment="Center"
+            Height="300"
+            VerticalAlignment="Center"
+            Width="314"/>
+        
+        <Canvas x:Name="myCanvas1"
+            HorizontalAlignment="Center"
+            Height="200"
+            VerticalAlignment="Center"
+            Width="400"/>        
+    </Grid>
+    
+</common:LayoutAwarePage>
+    
+    
